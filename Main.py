@@ -1,22 +1,15 @@
-import vk_api
-from vk_api.longpoll import VkLongPoll, VkEventType
-from vk_api.keyboard import VkKeyboard
-import requests
+import asyncio
+from vkbottle import API
+from vkbottle.bot import Bot, Message
 
-session = requests.Session()
+TOKEN = 'vk1.a.QaAOGk5zvMqtcWTiA5V2_QHI8JtmIi3q5ZIFUknAgIDETz1i-tAXNAmhH4d4uOWkcEx8wn6mjF6875E1QfV22WREf0360PEKUIwtRIMubuxY491y9Ub-9_skdrIMPG9TGjjzd66hgb8YOlAZgkVVtdGhPmYHsCUojm8F4PfxuHUM2uC8kSKSUUVIOy3SWQhzL7tEF4I6_il94IQ9gxlyAg'
 
-LOGIN = '+79179321974'
-PASSWORD = 'sokolbond007'
 
-vk_session = vk_api.VkApi(LOGIN, PASSWORD)
-longpoll = VkLongPoll(vk_session)
-vk = vk_session.get_api()
+bot = Bot(token=TOKEN)
 
-# try:
-#     vk_session.auth(token_only=True)
-# except vk_api.AuthError as error_msg:
-#     print(error_msg)
+@bot.on.message(text="Привет")
+async def hi_handler(message: Message):
+    users_info = await bot.api.users.get(message.from_id)
+    await message.answer("Привет, {}".format(users_info[0].first_name))
 
-keyboard = VkKeyboard(one_time=False, inline=True)
-keyboard.add_callback_button(label="Open URL",
-                             payload={"type": "open_link", "link": "https://vk.com/dev/bots_docs_5"})
+bot.run_forever()
